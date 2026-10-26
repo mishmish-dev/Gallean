@@ -2,10 +2,13 @@
 
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants Condition="'$(TorchSharpVersion)' == '0.102.8'">$(DefineConstants);TORCHSHARP_LEGACY</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="TorchSharp" />
     <PackageReference Include="libtorch-cpu-linux-x64" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
+    <PackageReference Include="libtorch-cpu-osx-arm64" Condition="'$(NETCoreSdkRuntimeIdentifier)' == 'osx-arm64'" />
+    <PackageReference Include="libtorch-cpu-osx-x64" Condition="'$(NETCoreSdkRuntimeIdentifier)' == 'osx-x64'" />
     <PackageReference Include="libtorch-cpu-win-x64" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
   </ItemGroup>
   <ItemGroup>

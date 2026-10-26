@@ -18,8 +18,8 @@ internal sealed class WanVaeAttentionBlock : Module<torch.Tensor, torch.Tensor>
         : base(nameof(WanVaeAttentionBlock))
     {
         norm = new WanRmsNorm(channels);
-        toQkv = Conv2d(channels, channels * 3, kernel_size: 1);
-        proj = Conv2d(channels, channels, kernel_size: 1);
+        toQkv = Conv2d(channels, channels * 3, 1);
+        proj = Conv2d(channels, channels, 1);
 
         RegisterComponents();
     }

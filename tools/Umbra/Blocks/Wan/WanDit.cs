@@ -2,7 +2,6 @@ using TorchSharp;
 using TorchSharp.Modules;
 using TorchSharp.Utils;
 using static TorchSharp.torch.nn;
-using GELU = TorchSharp.Modules.GELU;
 
 namespace Umbra;
 
@@ -45,9 +44,9 @@ internal sealed class WanDit : Module
         this.frequencyDim = frequencyDim;
         this.patch = patch;
 
-        patchEmbedding = Conv3d(inChannels, dim, kernel_size: patch, stride: patch);
+        patchEmbedding = Conv3d(inChannels, dim, patch, stride: patch);
         textEmbedding = new ModuleList<Module<torch.Tensor, torch.Tensor>>(
-            Linear(textDim, dim), GELU(approximate: GELU.Approximate.tanh), Linear(dim, dim));
+            Linear(textDim, dim), new TanhGelu(), Linear(dim, dim));
         timeEmbedding = new ModuleList<Module<torch.Tensor, torch.Tensor>>(
             Linear(frequencyDim, dim), SiLU(), Linear(dim, dim));
         timeProjection = new ModuleList<Module<torch.Tensor, torch.Tensor>>(

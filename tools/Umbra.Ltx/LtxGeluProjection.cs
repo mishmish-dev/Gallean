@@ -2,7 +2,6 @@ using TorchSharp;
 using TorchSharp.Modules;
 using TorchSharp.Utils;
 using static TorchSharp.torch.nn;
-using GELU = TorchSharp.Modules.GELU;
 
 namespace Umbra.Ltx;
 
@@ -16,7 +15,7 @@ internal sealed class LtxGeluProjection : Module<torch.Tensor, torch.Tensor>
         : base(nameof(LtxGeluProjection))
     {
         projection = Linear(inputChannels, outputChannels, hasBias);
-        activation = GELU(approximate: GELU.Approximate.tanh);
+        activation = new TanhGelu();
 
         RegisterComponents();
     }

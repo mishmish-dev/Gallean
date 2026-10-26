@@ -24,9 +24,9 @@ internal sealed class MosrDySample : Module<torch.Tensor, torch.Tensor>
 
         int channels = 2 * groups * scale * scale;
 
-        offset = Conv2d(inChannels, channels, kernel_size: 1, stride: 1, padding: 0L, bias: true);
-        scope = Conv2d(inChannels, channels, kernel_size: 1, stride: 1, padding: 0L, bias: false);
-        endConv = Conv2d(inChannels, outChannels, kernel_size: 1, stride: 1, padding: 0L, bias: true);
+        offset = Conv2d(inChannels, channels, 1, stride: 1, padding: 0L, bias: true);
+        scope = Conv2d(inChannels, channels, 1, stride: 1, padding: 0L, bias: false);
+        endConv = Conv2d(inChannels, outChannels, 1, stride: 1, padding: 0L, bias: true);
 
         register_buffer("init_pos", BuildInitialPositions(scale, groups));
 

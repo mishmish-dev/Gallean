@@ -16,15 +16,15 @@ internal sealed partial class BasicVsrSpyNet
         {
             basicModule = new ModuleChain(
             [
-                Conv2d(8, 32, kernel_size: 7, stride: 1, padding: 3),
+                Conv2d(8, 32, 7, stride: 1, padding: 3),
                 ReLU(inplace: false),
-                Conv2d(32, 64, kernel_size: 7, stride: 1, padding: 3),
+                Conv2d(32, 64, 7, stride: 1, padding: 3),
                 ReLU(inplace: false),
-                Conv2d(64, 32, kernel_size: 7, stride: 1, padding: 3),
+                Conv2d(64, 32, 7, stride: 1, padding: 3),
                 ReLU(inplace: false),
-                Conv2d(32, 16, kernel_size: 7, stride: 1, padding: 3),
+                Conv2d(32, 16, 7, stride: 1, padding: 3),
                 ReLU(inplace: false),
-                Conv2d(16, 2, kernel_size: 7, stride: 1, padding: 3)
+                Conv2d(16, 2, 7, stride: 1, padding: 3)
             ]);
 
             RegisterComponents();

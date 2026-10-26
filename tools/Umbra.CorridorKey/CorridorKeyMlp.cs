@@ -21,7 +21,7 @@ internal sealed class CorridorKeyMlp : Module<torch.Tensor, torch.Tensor>
         : base(nameof(CorridorKeyMlp))
     {
         hiddenProjection = Linear(dimension, hiddenDimension, hasBias: true);
-        activation = GELU(approximate: GELU.Approximate.none);
+        activation = GELU();
         outputProjection = Linear(hiddenDimension, dimension, hasBias: true);
 
         RegisterComponents();

@@ -14,13 +14,13 @@ internal sealed class MosrConvBlock : Module<torch.Tensor, torch.Tensor>
     {
         block = new ModuleChain(
         [
-            Conv2d(inChannels, outChannels, kernel_size: 3, stride: 1, padding: 1, bias: true),
+            Conv2d(inChannels, outChannels, 3, stride: 1, padding: 1, bias: true),
             Mish(),
-            Conv2d(outChannels, outChannels, kernel_size: 3, stride: 1, padding: 1, bias: true),
+            Conv2d(outChannels, outChannels, 3, stride: 1, padding: 1, bias: true),
             Mish()
         ]);
 
-        conv11 = Conv2d(inChannels, outChannels, kernel_size: 1, stride: 1, padding: 0L, bias: true);
+        conv11 = Conv2d(inChannels, outChannels, 1, stride: 1, padding: 0L, bias: true);
 
         RegisterComponents();
     }

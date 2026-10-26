@@ -29,13 +29,13 @@ internal sealed class BasicVsrSecondOrderDeformableAlignment
 
         convOffset = new ModuleChain(
         [
-            Conv2d((3 * features) + 4, features, kernel_size: 3, stride: 1, padding: 1),
+            Conv2d((3 * features) + 4, features, 3, stride: 1, padding: 1),
             LeakyReLU(NegativeSlope, inplace: true),
-            Conv2d(features, features, kernel_size: 3, stride: 1, padding: 1),
+            Conv2d(features, features, 3, stride: 1, padding: 1),
             LeakyReLU(NegativeSlope, inplace: true),
-            Conv2d(features, features, kernel_size: 3, stride: 1, padding: 1),
+            Conv2d(features, features, 3, stride: 1, padding: 1),
             LeakyReLU(NegativeSlope, inplace: true),
-            Conv2d(features, OffsetChannelsPerGroup * deformableGroups, kernel_size: 3, stride: 1, padding: 1)
+            Conv2d(features, OffsetChannelsPerGroup * deformableGroups, 3, stride: 1, padding: 1)
         ]);
 
         RegisterComponents();

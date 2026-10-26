@@ -27,18 +27,18 @@ internal sealed class MosrGatedCnnBlock : Module<torch.Tensor, torch.Tensor>
         convChannels = convolved;
 
         norm = new MosrLayerNorm(dimension);
-        fc1 = Conv2d(dimension, hidden * 2, kernel_size: 3, stride: 1, padding: 1, bias: true);
+        fc1 = Conv2d(dimension, hidden * 2, 3, stride: 1, padding: 1, bias: true);
 
         conv = Conv2d(
             convolved,
             convolved,
-            kernel_size: kernelSize,
+            kernelSize,
             stride: 1,
             padding: kernelSize / 2,
             groups: convolved,
             bias: true);
 
-        fc2 = Conv2d(hidden, dimension, kernel_size: 3, stride: 1, padding: 1, bias: true);
+        fc2 = Conv2d(hidden, dimension, 3, stride: 1, padding: 1, bias: true);
 
         RegisterComponents();
     }
@@ -54,10 +54,10 @@ internal sealed class MosrGatedCnnBlock : Module<torch.Tensor, torch.Tensor>
         using torch.Tensor convolvedInput = projected.narrow(1, gateChannels + passThroughChannels, convChannels);
         using torch.Tensor convolved = conv.call(convolvedInput);
         using torch.Tensor combined = torch.cat([passThrough, convolved], dim: 1);
-        using torch.Tensor activatedGate = functional.mish(gate);
+        using torch.Tensor activatedGate = functional.Mish(gate);
         using torch.Tensor gated = activatedGate * combined;
         using torch.Tensor projectedBack = fc2.call(gated);
-        using torch.Tensor activated = functional.mish(projectedBack);
+        using torch.Tensor activated = functional.Mish(projectedBack);
         using torch.Tensor shortcut = input - ShortcutOffset;
 
         torch.Tensor result = activated + shortcut;

@@ -35,9 +35,9 @@ internal sealed class CorridorKeyDecoderHead : Module
         third = new CorridorKeyProjection(featureChannels[2], embeddingDimension);
         second = new CorridorKeyProjection(featureChannels[1], embeddingDimension);
         first = new CorridorKeyProjection(featureChannels[0], embeddingDimension);
-        fuse = Conv2d(embeddingDimension * 4, embeddingDimension, kernel_size: 1, bias: false);
+        fuse = Conv2d(embeddingDimension * 4, embeddingDimension, 1, bias: false);
         normalization = new CorridorKeyBatchNorm(embeddingDimension);
-        classifier = Conv2d(embeddingDimension, outputChannels, kernel_size: 1, bias: true);
+        classifier = Conv2d(embeddingDimension, outputChannels, 1, bias: true);
 
         RegisterComponents();
     }

@@ -12,6 +12,11 @@
     <SkiaSharpVersion>4.153.1</SkiaSharpVersion>
     <TorchSharpVersion>0.107.0</TorchSharpVersion>
   </PropertyGroup>
+  <!-- TorchSharp 0.102.8 is the last release with Intel macOS binaries. -->
+  <PropertyGroup Condition="'$(NETCoreSdkRuntimeIdentifier)' == 'osx-x64'">
+    <TorchSharpVersion>0.102.8</TorchSharpVersion>
+    <LibTorchVersion>2.2.1.1</LibTorchVersion>
+  </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
@@ -44,6 +49,8 @@
     <PackageVersion Include="System.Reactive" Version="7.0.0" />
     <PackageVersion Include="TorchSharp" Version="$(TorchSharpVersion)" />
     <PackageVersion Include="libtorch-cpu-linux-x64" Version="$(LibTorchVersion)" />
+    <PackageVersion Include="libtorch-cpu-osx-arm64" Version="$(LibTorchVersion)" />
+    <PackageVersion Include="libtorch-cpu-osx-x64" Version="$(LibTorchVersion)" />
     <PackageVersion Include="libtorch-cpu-win-x64" Version="$(LibTorchVersion)" />
   </ItemGroup>
 </Project>

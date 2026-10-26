@@ -52,7 +52,8 @@ internal sealed class WanRmsNorm : Module<torch.Tensor, torch.Tensor>, IParamete
 
         long dimension = channelFirst ? 1 : input.dim() - 1;
 
-        using torch.Tensor normalizedInput = functional.normalize(input, dim: dimension);
+        using torch.Tensor magnitude = input.norm((int)dimension, keepdim: true).clamp_min(1e-12);
+        using torch.Tensor normalizedInput = input.div(magnitude);
         using torch.Tensor scaledInput = normalizedInput.mul(scale).mul(gamma);
 
         torch.Tensor result = bias is null ? scaledInput.alias() : scaledInput.add(bias);

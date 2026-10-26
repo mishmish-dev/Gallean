@@ -19,7 +19,7 @@ internal sealed class BasicVsrConvResidualBlocks : Module<torch.Tensor, torch.Te
 
         main = new ModuleChain(
         [
-            Conv2d(inputChannels, features, kernel_size: 3, stride: 1, padding: 1, bias: true),
+            Conv2d(inputChannels, features, 3, stride: 1, padding: 1, bias: true),
             LeakyReLU(0.1, inplace: true),
             new ModuleChain(blocks)
         ]);

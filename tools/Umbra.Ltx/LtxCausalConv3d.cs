@@ -33,7 +33,7 @@ internal sealed class LtxCausalConv3d : Module<torch.Tensor, torch.Tensor>
     }
 
     public bool Causal { get; }
-    public torch.Device Device => convolution.weight.device;
+    public torch.Device Device => convolution.weight!.device;
 
     public override torch.Tensor forward(torch.Tensor input)
     {

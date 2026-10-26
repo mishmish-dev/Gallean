@@ -1,10 +1,16 @@
 using TorchSharp;
-using static TorchSharp.torch.nn;
 
 namespace Umbra.CorridorKey;
 
 internal static class AlphaImage
 {
+    // The native antialias operator exists even when the managed interpolate API lacks it.
+    private static readonly torch.jit.CompilationUnit Resampler = torch.jit.compile("""
+        def resample(input: Tensor, size: int) -> Tensor:
+            return torch._upsample_bilinear2d_aa(input, [size, size], False)
+
+        """);
+
     private static readonly double[] NormalizationMean = [0.485, 0.456, 0.406];
     private static readonly double[] NormalizationDeviation = [0.229, 0.224, 0.225];
 
@@ -24,12 +30,7 @@ internal static class AlphaImage
 
     private static torch.Tensor Resample(torch.Tensor planes, int imageSize)
     {
-        return functional.interpolate(
-            planes,
-            size: [imageSize, imageSize],
-            mode: torch.InterpolationMode.Bilinear,
-            align_corners: false,
-            antialias: true);
+        return Resampler.invoke<torch.Tensor>("resample", planes, imageSize);
     }
 
     private static torch.Tensor BuildChannels(double[] values, torch.Device device)

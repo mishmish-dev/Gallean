@@ -2,7 +2,6 @@ using TorchSharp;
 using TorchSharp.Modules;
 using TorchSharp.Utils;
 using static TorchSharp.torch.nn;
-using GELU = TorchSharp.Modules.GELU;
 
 namespace Umbra;
 
@@ -34,7 +33,7 @@ internal sealed class WanDitBlock :
         norm3 = LayerNorm([dim], eps: epsilon);
         ffn = new ModuleList<Module<torch.Tensor, torch.Tensor>>(
             Linear(dim, feedForwardDim),
-            GELU(approximate: GELU.Approximate.tanh),
+            new TanhGelu(),
             Linear(feedForwardDim, dim));
         modulation = new Parameter(torch.zeros(1, 6, dim), requires_grad: false);
 

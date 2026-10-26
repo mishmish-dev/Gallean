@@ -19,5 +19,9 @@ internal static class ModuleExtensions
     }
 
     [UnsafeAccessor(UnsafeAccessorKind.Method, Name = "ConditionallyRegisterParameter")]
+#if TORCHSHARP_LEGACY
+    private static extern void ConditionallyRegisterParameter(Module module, string name, TorchSharp.torch.Tensor? value);
+#else
     private static extern void ConditionallyRegisterParameter(Module module, string name, Parameter? value);
+#endif
 }

@@ -16,7 +16,7 @@ internal sealed class MosrNetwork : Module<torch.Tensor, torch.Tensor>
     {
         List<Module<torch.Tensor, torch.Tensor>> stages =
         [
-            Conv2d(options.InChannels, options.Dimension, kernel_size: 3, stride: 1, padding: 1, bias: true)
+            Conv2d(options.InChannels, options.Dimension, 3, stride: 1, padding: 1, bias: true)
         ];
 
         for (int index = 0; index < options.BlockCount; index++)
@@ -25,11 +25,11 @@ internal sealed class MosrNetwork : Module<torch.Tensor, torch.Tensor>
                 options.Dimension, options.ExpansionRatio, options.ConvRatio, options.KernelSize));
         }
 
-        stages.Add(Conv2d(options.Dimension, options.Dimension * 2, kernel_size: 3, stride: 1, padding: 1, bias: true));
+        stages.Add(Conv2d(options.Dimension, options.Dimension * 2, 3, stride: 1, padding: 1, bias: true));
         stages.Add(Mish());
-        stages.Add(Conv2d(options.Dimension * 2, options.Dimension, kernel_size: 3, stride: 1, padding: 1, bias: true));
+        stages.Add(Conv2d(options.Dimension * 2, options.Dimension, 3, stride: 1, padding: 1, bias: true));
         stages.Add(Mish());
-        stages.Add(Conv2d(options.Dimension, options.Dimension, kernel_size: 1, stride: 1, padding: 0L, bias: true));
+        stages.Add(Conv2d(options.Dimension, options.Dimension, 1, stride: 1, padding: 0L, bias: true));
 
         gblocks = new ModuleChain(stages);
         shortcut = new MosrConvBlock(options.InChannels, options.Dimension);

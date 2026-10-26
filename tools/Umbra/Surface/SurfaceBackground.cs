@@ -75,7 +75,7 @@ internal static class SurfaceBackground
 
         for (int iteration = 0; iteration < iterations; iteration++)
         {
-            torch.Tensor next = functional.max_pool2d(result, kernel_size: 3, stride: 1, padding: 1);
+            torch.Tensor next = functional.max_pool2d(result, 3, stride: 1, padding: 1);
 
             result.Dispose();
             result = next;
@@ -93,8 +93,8 @@ internal static class SurfaceBackground
 
         for (int iteration = 0; iteration < FillIterations; iteration++)
         {
-            using torch.Tensor spreadValues = functional.avg_pool2d(estimate, kernel_size: 3, stride: 1, padding: 1);
-            using torch.Tensor spreadWeight = functional.avg_pool2d(weight, kernel_size: 3, stride: 1, padding: 1);
+            using torch.Tensor spreadValues = functional.avg_pool2d(estimate, 3, stride: 1, padding: 1);
+            using torch.Tensor spreadWeight = functional.avg_pool2d(weight, 3, stride: 1, padding: 1);
             using torch.Tensor spreadAverage = spreadValues.div(spreadWeight.clamp_min(Epsilon));
             using torch.Tensor reachedMask = spreadWeight.gt(0.0).to(weight.dtype);
 

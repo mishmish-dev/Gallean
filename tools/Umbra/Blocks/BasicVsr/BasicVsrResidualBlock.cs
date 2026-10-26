@@ -12,8 +12,8 @@ internal sealed class BasicVsrResidualBlock : Module<torch.Tensor, torch.Tensor>
     public BasicVsrResidualBlock(int features)
         : base(nameof(BasicVsrResidualBlock))
     {
-        conv1 = Conv2d(features, features, kernel_size: 3, stride: 1, padding: 1, bias: true);
-        conv2 = Conv2d(features, features, kernel_size: 3, stride: 1, padding: 1, bias: true);
+        conv1 = Conv2d(features, features, 3, stride: 1, padding: 1, bias: true);
+        conv2 = Conv2d(features, features, 3, stride: 1, padding: 1, bias: true);
 
         RegisterComponents();
     }

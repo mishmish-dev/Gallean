@@ -23,11 +23,11 @@ internal sealed class WanResample : Module<torch.Tensor, torch.Tensor>
             WanResampleType.Upsample2d or WanResampleType.Upsample3d =>
                 new ModuleList<Module<torch.Tensor, torch.Tensor>>(
                     Upsample(scale_factor: [2.0, 2.0], mode: torch.UpsampleMode.Nearest),
-                    Conv2d(channels, channels / 2, kernel_size: 3, padding: 1)),
+                    Conv2d(channels, channels / 2, 3, padding: 1)),
             WanResampleType.Downsample2d or WanResampleType.Downsample3d =>
                 new ModuleList<Module<torch.Tensor, torch.Tensor>>(
                     ZeroPad2d((0, 1, 0, 1)),
-                    Conv2d(channels, channels, kernel_size: 3, stride: 2))
+                    Conv2d(channels, channels, 3, stride: 2))
         };
 
         timeConv = type switch

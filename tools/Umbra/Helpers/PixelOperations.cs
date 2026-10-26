@@ -135,7 +135,7 @@ internal static class PixelOperations
 
         using torch.Tensor interior = distance.clamp_min(0.0);
         using torch.Tensor thickness = functional.max_pool2d(
-            interior, kernel_size: (2L * scale) + 1, stride: 1, padding: scale);
+            interior, (2L * scale) + 1, stride: 1, padding: scale);
         using torch.Tensor targetRadius = thickness.sub(TexelCenterOffset).clamp(0.0, scale);
 
         torch.Tensor result = torch.zeros_like(distance);
@@ -157,9 +157,9 @@ internal static class PixelOperations
     private static torch.Tensor Tent(torch.Tensor planes, int radius)
     {
         torch.Tensor paddedPlanes = functional.pad(planes, [radius, radius, radius, radius], PaddingModes.Replicate);
-        torch.Tensor averagedPlanes = functional.avg_pool2d(paddedPlanes, kernel_size: radius + 1, stride: 1);
+        torch.Tensor averagedPlanes = functional.avg_pool2d(paddedPlanes, radius + 1, stride: 1);
 
-        return functional.avg_pool2d(averagedPlanes, kernel_size: radius + 1, stride: 1);
+        return functional.avg_pool2d(averagedPlanes, radius + 1, stride: 1);
     }
 
     private static torch.Tensor PushPull(torch.Tensor colors, torch.Tensor coverage)
@@ -211,7 +211,7 @@ internal static class PixelOperations
 
     private static torch.Tensor SumNeighborhood(torch.Tensor planes)
     {
-        return functional.avg_pool2d(planes, kernel_size: 3, stride: 1, padding: 1).mul(NeighborhoodSize);
+        return functional.avg_pool2d(planes, 3, stride: 1, padding: 1).mul(NeighborhoodSize);
     }
 
     private static torch.Tensor BuildLanczosWeights(long source, long target, torch.Device device)

@@ -1,4 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -7,6 +9,8 @@
     <IsPublishable>$([MSBuild]::IsOSPlatform('OSX'))</IsPublishable>
     <PublishTrimmed>$(IsPublishable)</PublishTrimmed>
     <PublishAot>$(IsPublishable)</PublishAot>
+    <_MacOSPublishDir>$(PublishDir)</_MacOSPublishDir>
+    <_PublishAllRuntimeIdentifiers Condition="'$(IsPublishable)' == 'true' And '$(RuntimeIdentifier)' == ''">true</_PublishAllRuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,5 +22,12 @@
   </ItemGroup>
 
   <Import Project="..\..\Publish.targets" />
+  <!-- Native AOT targets run only in the per-runtime builds. -->
+  <PropertyGroup Condition="'$(_PublishAllRuntimeIdentifiers)' == 'true'">
+    <ILCompilerTargetsPath />
+  </PropertyGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+  <Import Project="Publish.targets" Condition="'$(_PublishAllRuntimeIdentifiers)' == 'true'" />
 
 </Project>

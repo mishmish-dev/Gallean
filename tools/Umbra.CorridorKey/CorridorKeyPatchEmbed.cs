@@ -13,7 +13,7 @@ internal sealed class CorridorKeyPatchEmbed : Module<torch.Tensor, torch.Tensor>
     public CorridorKeyPatchEmbed(int inputChannels, int outputChannels, int kernel, int stride, int padding)
         : base(nameof(CorridorKeyPatchEmbed))
     {
-        projection = Conv2d(inputChannels, outputChannels, kernel_size: kernel, stride: stride, padding: padding, bias: true);
+        projection = Conv2d(inputChannels, outputChannels, kernel, stride: stride, padding: padding, bias: true);
 
         RegisterComponents();
     }

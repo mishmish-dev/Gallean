@@ -22,9 +22,9 @@ internal sealed class CorridorKeyRefinerBlock : Module<torch.Tensor, torch.Tenso
     public CorridorKeyRefinerBlock(int channels, int dilation)
         : base(nameof(CorridorKeyRefinerBlock))
     {
-        firstConvolution = Conv2d(channels, channels, kernel_size: 3, padding: dilation, dilation: dilation, bias: true);
+        firstConvolution = Conv2d(channels, channels, 3, padding: dilation, dilation: dilation, bias: true);
         firstNorm = GroupNorm(8, channels);
-        secondConvolution = Conv2d(channels, channels, kernel_size: 3, padding: dilation, dilation: dilation, bias: true);
+        secondConvolution = Conv2d(channels, channels, 3, padding: dilation, dilation: dilation, bias: true);
         secondNorm = GroupNorm(8, channels);
 
         RegisterComponents();

@@ -97,7 +97,7 @@ internal sealed partial class BasicVsrSpyNet : Module<torch.Tensor, torch.Tensor
         for (int level = 0; level < Levels - 1; level++)
         {
             pyramid.Insert(0, functional.avg_pool2d(
-                pyramid[0], kernel_size: 2, stride: 2, count_include_pad: false));
+                pyramid[0], 2, stride: 2, count_include_pad: false));
         }
 
         return pyramid;

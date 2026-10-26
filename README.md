@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  A cross-platformn open source Disciples 2 remake.<br />
+  A cross-platform open source Disciples 2 remake.<br />
   <a href="https://gallean.org">Website</a> ·
   <a href="https://gallean.org/blog/remaking-disciples-2-gallean">Remaking Disciples 2</a> ·
   <a href="https://gallean.org/roadmap">Roadmap</a> ·
@@ -34,9 +34,11 @@ dotnet run --project src/Gallean.Client.Linux
 dotnet run --project src/Gallean.Client.MacOS
 ```
 
-macOS support is experimental. Sound output uses NAudio's preview Core Audio backend for music, sound effects, voices, and ambient audio.
+On macOS, sound output uses NAudio's preview Core Audio backend for music, sound effects, voices, and ambient audio.
 
 ## Tests
+
+On macOS, install the OpenMP runtime needed by the asset pipeline tests (`brew install libomp`). Intel Macs use TorchSharp 0.102.8 and libtorch 2.2.1.1, the last versions supporting that architecture.
 
 ```bash
 dotnet test

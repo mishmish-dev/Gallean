@@ -29,14 +29,14 @@ internal sealed class CorridorKeyCnnRefiner : Module<torch.Tensor, torch.Tensor,
         : base(nameof(CorridorKeyCnnRefiner))
     {
         stem = Sequential(
-            Conv2d(inputChannels, hiddenChannels, kernel_size: 3, padding: 1, bias: true),
+            Conv2d(inputChannels, hiddenChannels, 3, padding: 1, bias: true),
             GroupNorm(8, hiddenChannels),
             ReLU());
         first = new CorridorKeyRefinerBlock(hiddenChannels, dilation: 1);
         second = new CorridorKeyRefinerBlock(hiddenChannels, dilation: 2);
         third = new CorridorKeyRefinerBlock(hiddenChannels, dilation: 4);
         fourth = new CorridorKeyRefinerBlock(hiddenChannels, dilation: 8);
-        output = Conv2d(hiddenChannels, outputChannels, kernel_size: 1, bias: true);
+        output = Conv2d(hiddenChannels, outputChannels, 1, bias: true);
 
         RegisterComponents();
     }

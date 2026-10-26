@@ -60,10 +60,10 @@ internal sealed class BasicVsrNetwork : Module
         }
 
         reconstruction = new BasicVsrConvResidualBlocks(5 * midChannels, midChannels, ReconstructBlockCount);
-        upconv1 = Conv2d(midChannels, midChannels * 4, kernel_size: 3, stride: 1, padding: 1, bias: true);
-        upconv2 = Conv2d(midChannels, TailChannels * 4, kernel_size: 3, stride: 1, padding: 1, bias: true);
-        convHr = Conv2d(TailChannels, TailChannels, kernel_size: 3, stride: 1, padding: 1);
-        convLast = Conv2d(TailChannels, 3, kernel_size: 3, stride: 1, padding: 1);
+        upconv1 = Conv2d(midChannels, midChannels * 4, 3, stride: 1, padding: 1, bias: true);
+        upconv2 = Conv2d(midChannels, TailChannels * 4, 3, stride: 1, padding: 1, bias: true);
+        convHr = Conv2d(TailChannels, TailChannels, 3, stride: 1, padding: 1);
+        convLast = Conv2d(TailChannels, 3, 3, stride: 1, padding: 1);
 
         RegisterComponents();
     }
