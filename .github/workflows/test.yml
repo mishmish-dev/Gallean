@@ -38,6 +38,15 @@ jobs:
           restore-keys: nuget-${{ runner.os }}-
 
       - if: runner.os == 'macOS' && runner.arch == 'ARM64'
-        run: brew install libomp
+        uses: actions/cache@v6
+        id: libomp
+        with:
+          path: |
+            /opt/homebrew/Cellar/libomp
+            /opt/homebrew/opt/libomp
+          key: libomp-${{ runner.os }}-${{ runner.arch }}-v1
+
+      - if: runner.os == 'macOS' && runner.arch == 'ARM64' && steps.libomp.outputs.cache-hit != 'true'
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install libomp
 
       - run: dotnet test

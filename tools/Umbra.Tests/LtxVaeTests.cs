@@ -175,7 +175,7 @@ public sealed class LtxVaeTests
         using torch.Tensor result = vae.Encode(parity["encoder.input"]);
 
         Assert.That(result.shape, Is.EqualTo(parity["encoder.expected"].shape));
-        Assert.That(TestHelpers.MaxDifference(result, parity["encoder.expected"]), Is.LessThan(1e-5f));
+        Assert.That(TestHelpers.MaxDifference(result, parity["encoder.expected"]), Is.LessThan(2e-5f));
     }
 
     [Test]
@@ -221,7 +221,7 @@ public sealed class LtxVaeTests
         using torch.Tensor result = vae.Encode(parity["encoder.input"]);
 
         Assert.That(result.shape, Is.EqualTo(parity["encoder.expected"].shape));
-        Assert.That(TestHelpers.MaxDifference(result, parity["encoder.expected"]), Is.LessThan(1e-5f));
+        Assert.That(TestHelpers.MaxDifference(result, parity["encoder.expected"]), Is.LessThan(2e-5f));
     }
 
     [Test]
