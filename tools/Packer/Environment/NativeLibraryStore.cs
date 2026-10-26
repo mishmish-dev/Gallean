@@ -16,6 +16,8 @@ internal sealed class NativeLibraryStore(
     private const string ShaExtension = ".sha";
     private const string FragmentExtension = ".fragment";
 
+    private static readonly string[] Runtimes = ["linux-x64", "win-x64", "osx-arm64", "osx-x64"];
+
     private static readonly string[] PayloadPrefixes =
     [
         $"{RuntimesDirectoryName}/{NativeRuntime.Identifier}/{NativeDirectoryName}/",
@@ -29,6 +31,11 @@ internal sealed class NativeLibraryStore(
         if (existingDirectory is not null)
         {
             return existingDirectory;
+        }
+
+        if (!Runtimes.Contains(NativeRuntime.Identifier))
+        {
+            throw new NotSupportedException($"The native libraries for {NativeRuntime.Identifier} are not available.");
         }
 
         string cacheDirectory = GetCacheDirectory(set);
