@@ -13,7 +13,8 @@
     <TorchSharpVersion>0.107.0</TorchSharpVersion>
   </PropertyGroup>
   <!-- TorchSharp 0.102.8 is the last release with Intel macOS binaries. -->
-  <PropertyGroup Condition="'$(NETCoreSdkRuntimeIdentifier)' == 'osx-x64'">
+  <!-- The SDK RID is not available yet during central package evaluation. -->
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX')) And '$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture)' == 'X64'">
     <TorchSharpVersion>0.102.8</TorchSharpVersion>
     <LibTorchVersion>2.2.1.1</LibTorchVersion>
   </PropertyGroup>
