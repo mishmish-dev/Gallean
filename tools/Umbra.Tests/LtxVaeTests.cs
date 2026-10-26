@@ -4,6 +4,9 @@ namespace Umbra.Tests;
 
 public sealed class LtxVaeTests
 {
+    // End-to-end FP32 accumulation differs slightly across libtorch versions and CPUs.
+    private const float EndToEndTolerance = 2e-5f;
+
     private static Dictionary<string, torch.Tensor> LoadVaeWeights()
     {
         Dictionary<string, torch.Tensor> weights = [];
@@ -175,7 +178,7 @@ public sealed class LtxVaeTests
         using torch.Tensor result = vae.Encode(parity["encoder.input"]);
 
         Assert.That(result.shape, Is.EqualTo(parity["encoder.expected"].shape));
-        Assert.That(TestHelpers.MaxDifference(result, parity["encoder.expected"]), Is.LessThan(2e-5f));
+        Assert.That(TestHelpers.MaxDifference(result, parity["encoder.expected"]), Is.LessThan(EndToEndTolerance));
     }
 
     [Test]
@@ -221,7 +224,7 @@ public sealed class LtxVaeTests
         using torch.Tensor result = vae.Encode(parity["encoder.input"]);
 
         Assert.That(result.shape, Is.EqualTo(parity["encoder.expected"].shape));
-        Assert.That(TestHelpers.MaxDifference(result, parity["encoder.expected"]), Is.LessThan(2e-5f));
+        Assert.That(TestHelpers.MaxDifference(result, parity["encoder.expected"]), Is.LessThan(EndToEndTolerance));
     }
 
     [Test]
@@ -268,7 +271,7 @@ public sealed class LtxVaeTests
         using torch.Tensor result = vae.Decode(parity["decoder.input"], frames);
 
         Assert.That(result.shape, Is.EqualTo(parity["decoder.expected"].shape));
-        Assert.That(TestHelpers.MaxDifference(result, parity["decoder.expected"]), Is.LessThan(1e-5f));
+        Assert.That(TestHelpers.MaxDifference(result, parity["decoder.expected"]), Is.LessThan(EndToEndTolerance));
     }
 
     [Test]
@@ -312,7 +315,7 @@ public sealed class LtxVaeTests
         using torch.Tensor result = vae.Decode(parity["decoder.input"], frames);
 
         Assert.That(result.shape, Is.EqualTo(parity["decoder.expected"].shape));
-        Assert.That(TestHelpers.MaxDifference(result, parity["decoder.expected"]), Is.LessThan(1e-5f));
+        Assert.That(TestHelpers.MaxDifference(result, parity["decoder.expected"]), Is.LessThan(EndToEndTolerance));
     }
 
     [Test]
