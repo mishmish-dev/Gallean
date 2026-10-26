@@ -1,0 +1,42 @@
+name: Validate macOS
+
+on:
+  push:
+    branches: [codex/macos-minimal-ci-20261026]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    uses: ./.github/workflows/test.yml
+
+  publish:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, macos-15-intel]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - run: dotnet publish
+      - name: Check both architecture packages
+        shell: bash
+        run: |
+          for rid in osx-arm64 osx-x64; do
+            test "$(find dist -name "*-$rid.zip" | wc -l | tr -d ' ')" = 1
+            test "$(find dist -name "*-$rid-symbols.zip" | wc -l | tr -d ' ')" = 1
+          done
+      - uses: actions/upload-artifact@v7
+        with:
+          name: macos-packages-${{ runner.arch }}
+          path: dist/*.zip
+          if-no-files-found: error
+          retention-days: 1
