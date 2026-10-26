@@ -38,7 +38,7 @@ On macOS, sound output uses NAudio's preview Core Audio backend for music, sound
 
 ## Tests
 
-On Apple Silicon Macs, install the OpenMP runtime needed by the asset pipeline tests (`brew install libomp`). Umbra’s ML tests are skipped on Intel Macs because TorchSharp no longer supports that platform.
+On Apple Silicon Macs, install the OpenMP runtime needed by the asset pipeline tests (`brew install libomp`). Umbra and Packer tests are skipped on Intel Macs because TorchSharp and Magick.NET no longer support that platform.
 
 ```bash
 dotnet test

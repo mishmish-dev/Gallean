@@ -1,15 +1,9 @@
 <Project>
 
-  <PropertyGroup>
-    <CreatePackage>false</CreatePackage>
-  </PropertyGroup>
-
   <Target Name="Publish" Condition="'$(IsPublishable)' == 'true'">
     <ItemGroup>
       <_PublishRuntimeIdentifier Include="$(RuntimeIdentifiers)" />
-      <_PublishProject Include="$(MSBuildProjectFullPath)" AdditionalProperties="RuntimeIdentifier=%(_PublishRuntimeIdentifier.Identity)">
-        <AdditionalProperties Condition="'$(_MacOSPublishDir)' != ''">RuntimeIdentifier=%(_PublishRuntimeIdentifier.Identity);PublishDir=$(_MacOSPublishDir)/%(_PublishRuntimeIdentifier.Identity)/</AdditionalProperties>
-      </_PublishProject>
+      <_PublishProject Include="$(MSBuildProjectFullPath)" AdditionalProperties="RuntimeIdentifier=%(_PublishRuntimeIdentifier.Identity)" />
     </ItemGroup>
     <MSBuild Projects="@(_PublishProject)" Targets="Publish" BuildInParallel="true" />
   </Target>
