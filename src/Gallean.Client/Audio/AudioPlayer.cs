@@ -108,8 +108,25 @@ internal sealed class AudioPlayer : IAudioPlayer
             return null;
         }
 
-        MusicQueueSampleProvider loop = new(assets, MusicQueue.Create([key], isLooping: true), MusicPosition.Start);
-        AmbientSoundSampleProvider samples = new(loop, volume, pan);
+        Sound sound;
+
+        try
+        {
+            using AssetCache<Sound>.Lease? lease = assets.GetOptionalSound(key);
+
+            if (lease is null)
+            {
+                return null;
+            }
+
+            sound = lease;
+        }
+        catch (Exception ex)
+        {
+            throw new SoundDecodeException(key, ex);
+        }
+
+        AmbientSoundSampleProvider samples = new(sound, volume, pan);
 
         if (TryAddMixerInput(sounds, samples))
         {
