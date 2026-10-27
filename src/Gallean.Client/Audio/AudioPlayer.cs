@@ -70,7 +70,9 @@ internal sealed class AudioPlayer : IAudioPlayer
             return null;
         }
 
-        MusicSampleProvider samples = new(new MusicQueueSampleProvider(assets, queue, position));
+        MusicQueueSampleProvider source = new(assets, queue, position);
+        source.Prepare();
+        MusicSampleProvider samples = new(source);
 
         if (TryAddMixerInput(music, samples))
         {
@@ -78,6 +80,7 @@ internal sealed class AudioPlayer : IAudioPlayer
         }
         else
         {
+            source.Dispose();
             return null;
         }
     }
@@ -90,6 +93,7 @@ internal sealed class AudioPlayer : IAudioPlayer
         }
 
         MusicQueueSampleProvider samples = new(assets, MusicQueue.Create([key], isLooping: false), MusicPosition.Start);
+        samples.Prepare();
 
         if (TryAddMixerInput(sounds, samples))
         {
@@ -97,6 +101,7 @@ internal sealed class AudioPlayer : IAudioPlayer
         }
         else
         {
+            samples.Dispose();
             return null;
         }
     }
