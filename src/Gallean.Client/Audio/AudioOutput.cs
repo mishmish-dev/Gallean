@@ -11,6 +11,7 @@ internal sealed class AudioOutput : IDisposable
     private readonly ILog log;
     private readonly MixingSampleProvider mixer = CreateMixer();
     private IWavePlayer? device;
+    private ReadAheadWaveProvider? readAhead;
 
     public AudioOutput(ILog log)
     {
@@ -28,7 +29,16 @@ internal sealed class AudioOutput : IDisposable
 
     public void Dispose()
     {
-        device?.Dispose();
+        try
+        {
+            device?.Dispose();
+        }
+        finally
+        {
+            device = null;
+            readAhead?.Dispose();
+            readAhead = null;
+        }
     }
 
     private static MixingSampleProvider CreateMixer()
@@ -69,13 +79,21 @@ internal sealed class AudioOutput : IDisposable
         {
             device = CreateDevice();
             device.PlaybackStopped += OnPlaybackStopped;
-            device.Init(mixer);
+            if (OperatingSystem.IsMacOS())
+            {
+                // Keep decoding off Core Audio's deadline-sensitive callback.
+                readAhead = new ReadAheadWaveProvider(new SampleToWaveProvider(mixer));
+                device.Init(readAhead);
+            }
+            else
+            {
+                device.Init(mixer);
+            }
             device.Play();
         }
         catch (Exception ex)
         {
-            device?.Dispose();
-            device = null;
+            Dispose();
 
             log.Error("Failed to initialize sound output.", ex);
         }
@@ -95,8 +113,7 @@ internal sealed class AudioOutput : IDisposable
                 }
                 else
                 {
-                    device?.Dispose();
-                    device = null;
+                    Dispose();
 
                     log.Error("Sound output failed.", ex);
                 }

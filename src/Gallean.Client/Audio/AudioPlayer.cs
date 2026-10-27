@@ -70,9 +70,7 @@ internal sealed class AudioPlayer : IAudioPlayer
             return null;
         }
 
-        MusicQueueSampleProvider source = new(assets, queue, position);
-        source.Prepare();
-        MusicSampleProvider samples = new(source);
+        MusicSampleProvider samples = new(new MusicQueueSampleProvider(assets, queue, position));
 
         if (TryAddMixerInput(music, samples))
         {
@@ -80,7 +78,6 @@ internal sealed class AudioPlayer : IAudioPlayer
         }
         else
         {
-            source.Dispose();
             return null;
         }
     }
@@ -93,7 +90,6 @@ internal sealed class AudioPlayer : IAudioPlayer
         }
 
         MusicQueueSampleProvider samples = new(assets, MusicQueue.Create([key], isLooping: false), MusicPosition.Start);
-        samples.Prepare();
 
         if (TryAddMixerInput(sounds, samples))
         {
@@ -101,7 +97,6 @@ internal sealed class AudioPlayer : IAudioPlayer
         }
         else
         {
-            samples.Dispose();
             return null;
         }
     }
@@ -113,25 +108,8 @@ internal sealed class AudioPlayer : IAudioPlayer
             return null;
         }
 
-        Sound sound;
-
-        try
-        {
-            using AssetCache<Sound>.Lease? lease = assets.GetOptionalSound(key);
-
-            if (lease is null)
-            {
-                return null;
-            }
-
-            sound = lease;
-        }
-        catch (Exception ex)
-        {
-            throw new SoundDecodeException(key, ex);
-        }
-
-        AmbientSoundSampleProvider samples = new(sound, volume, pan);
+        MusicQueueSampleProvider loop = new(assets, MusicQueue.Create([key], isLooping: true), MusicPosition.Start);
+        AmbientSoundSampleProvider samples = new(loop, volume, pan);
 
         if (TryAddMixerInput(sounds, samples))
         {

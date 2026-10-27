@@ -3,31 +3,6 @@ namespace Gallean.Client.Tests;
 public sealed class MusicQueueSampleProviderTests
 {
     [Test]
-    public void PrepareTest()
-    {
-        AssetSoundKey key = new AssetSoundKey.MenuMusic();
-        TestAssetProviderBuilder builder = new();
-        AssetStream sound = builder.CreateSound(TestSounds.Create(SoundDecoder.MixerSampleRate, SoundDecoder.MixerChannels, 64));
-
-        using TestAssetProvider assets = builder
-            .ResolveSprite(_ => throw new InvalidOperationException("No sprite expected."))
-            .ResolveAnimation(_ => throw new InvalidOperationException("No animation expected."))
-            .ResolveSound(_ => sound)
-            .Build();
-        using MusicQueueSampleProvider provider = new(assets, MusicQueue.Create([key], isLooping: false), MusicPosition.Start);
-
-        provider.Prepare();
-        provider.Prepare();
-
-        Assert.That(assets.OptionalAssets, Is.EqualTo([key]));
-        Assert.That(provider.Position.Track, Is.Zero);
-        Assert.That(provider.Read(new float[128]), Is.EqualTo(128));
-        provider.Dispose();
-        provider.Prepare();
-        Assert.That(assets.OptionalAssets, Is.EqualTo([key]));
-    }
-
-    [Test]
     public void LoopingTest()
     {
         AssetSoundKey first = new AssetSoundKey.MenuMusic();

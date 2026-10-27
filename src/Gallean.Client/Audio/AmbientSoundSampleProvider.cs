@@ -6,25 +6,23 @@ internal sealed class AmbientSoundSampleProvider : ISampleProvider, IAmbientAudi
 {
     private static readonly TimeSpan FadeDuration = TimeSpan.FromMilliseconds(250);
 
-    private readonly Sound sound;
+    private readonly MusicQueueSampleProvider source;
     private readonly float gainPerFrame;
-    private int position;
-    private bool finished;
     private volatile float targetLeftGain;
     private volatile float targetRightGain;
     private float leftGain;
     private float rightGain;
 
-    public AmbientSoundSampleProvider(Sound sound, float volume, float pan)
+    public AmbientSoundSampleProvider(MusicQueueSampleProvider source, float volume, float pan)
     {
-        this.sound = sound;
+        this.source = source;
 
-        gainPerFrame = 1.0f / (float)(SoundDecoder.MixerSampleRate * FadeDuration.TotalSeconds);
+        gainPerFrame = 1.0f / (float)(source.WaveFormat.SampleRate * FadeDuration.TotalSeconds);
 
         SetLevel(volume, pan);
     }
 
-    public WaveFormat WaveFormat { get; } = WaveFormat.CreateIeeeFloatWaveFormat(SoundDecoder.MixerSampleRate, SoundDecoder.MixerChannels);
+    public WaveFormat WaveFormat => source.WaveFormat;
 
     public void SetLevel(float volume, float pan)
     {
@@ -40,24 +38,10 @@ internal sealed class AmbientSoundSampleProvider : ISampleProvider, IAmbientAudi
 
     public int Read(Span<float> buffer)
     {
-        if (finished || sound.Samples.Length == 0)
-        {
-            return 0;
-        }
-
         float targetLeft = targetLeftGain;
         float targetRight = targetRightGain;
 
-        int count = 0;
-
-        while (count < buffer.Length)
-        {
-            int available = Math.Min(buffer.Length - count, sound.Samples.Length - position);
-            sound.Samples.AsSpan(position, available).CopyTo(buffer[count..]);
-            count += available;
-            position = (position + available) % sound.Samples.Length;
-        }
-
+        int count = source.Read(buffer);
         int frames = count / SoundDecoder.MixerChannels;
 
         for (int frame = 0; frame < frames; frame++)
@@ -71,9 +55,10 @@ internal sealed class AmbientSoundSampleProvider : ISampleProvider, IAmbientAudi
             buffer[index + 1] *= rightGain;
         }
 
-        if (targetLeft == 0 && targetRight == 0 && leftGain == 0 && rightGain == 0)
+        if (targetLeft == 0 && targetRight == 0 && leftGain == 0 && rightGain == 0 ||
+            count < buffer.Length)
         {
-            finished = true;
+            source.Dispose();
         }
 
         return count;

@@ -34,18 +34,6 @@ internal sealed partial class MusicQueueSampleProvider(IAssetProvider assets, Mu
         }
     }
 
-    // Prime the first track before handing this provider to the audio thread.
-    public void Prepare()
-    {
-        lock (locker)
-        {
-            if (!disposed && currentTrack is null)
-            {
-                currentTrack = OpenNextTrack();
-            }
-        }
-    }
-
     public int Read(Span<float> buffer)
     {
         lock (locker)
