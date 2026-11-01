@@ -10,7 +10,7 @@ internal sealed class AudioOutput : IDisposable
 {
     private readonly ILog log;
     private readonly MixingSampleProvider mixer = CreateMixer();
-    private IWavePlayer? device;
+    private IDisposable? device;
 
     private AudioOutput(ILog log)
     {
@@ -35,6 +35,7 @@ internal sealed class AudioOutput : IDisposable
     public void Dispose()
     {
         device?.Dispose();
+        device = null;
     }
 
     private static MixingSampleProvider CreateMixer()
@@ -59,10 +60,6 @@ internal sealed class AudioOutput : IDisposable
         {
             return new AlsaOut();
         }
-        else if (OperatingSystem.IsMacOSVersionAtLeast(10, 5))
-        {
-            return new CoreAudioPlayer();
-        }
         else
         {
             throw new PlatformNotSupportedException("No sound output is available on this platform.");
@@ -73,15 +70,22 @@ internal sealed class AudioOutput : IDisposable
     {
         try
         {
-            device = await CreateDeviceAsync();
-            device.PlaybackStopped += OnPlaybackStopped;
-            device.Init(mixer);
-            device.Play();
+            if (OperatingSystem.IsMacOS())
+            {
+                device = new MacAudioOutput(mixer, ex => OnPlaybackStopped(this, new StoppedEventArgs(ex)));
+            }
+            else
+            {
+                IWavePlayer player = await CreateDeviceAsync();
+                device = player;
+                player.PlaybackStopped += OnPlaybackStopped;
+                player.Init(mixer);
+                player.Play();
+            }
         }
         catch (Exception ex)
         {
-            device?.Dispose();
-            device = null;
+            Dispose();
 
             log.Error("Failed to initialize sound output.", ex);
         }
@@ -101,8 +105,7 @@ internal sealed class AudioOutput : IDisposable
                 }
                 else
                 {
-                    device?.Dispose();
-                    device = null;
+                    Dispose();
 
                     log.Error("Sound output failed.", ex);
                 }
